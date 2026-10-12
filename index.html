@@ -11,6 +11,123 @@
 
   </style>
 </head>
+<!-- Sostituisci il blocco <script> che hai aggiunto prima di <body> con questo.
+     Incolla questo blocco dopo lo script originale, subito prima di </body>.
+     I tre JPG devono trovarsi nella stessa cartella del file HTML. -->
+<script>
+(() => {
+  const nuoveOpere = [
+    {
+      title: "La follia ha occhi di foglie",
+      year: "2022",
+      medium: "Pittura",
+      file: "PHOTO-2026-10-12-18-29-00.jpg",
+      description: `Opera intensa e visionaria, nella quale la figura femminile diventa espressione di un universo interiore sospeso tra realtà, sogno e inquietudine.
+Ci sono follie che non fanno rumore: crescono silenziose tra i pensieri, come foglie che nascondono gli occhi per lasciare vedere l'anima.`
+    },
+    {
+      title: "Il disperato",
+      year: "1998",
+      medium: "Olio su tela",
+      file: "PHOTO-2026-10-12-18-34-51.jpg",
+      description: `Un uomo, sopraffatto dalla disperazione e dal peso dell’esistenza, cerca nell’alcol un rifugio dal proprio dolore. Il suo sguardo è smarrito, il corpo abbandonato, la mente attraversata dal desiderio di porre fine alla propria sofferenza.
+Eppure, nell’oscurità dei suoi pensieri, sopravvive un tenue bagliore di speranza. È una luce fragile ma ostinata, capace di trattenerlo sull’orlo dell’abisso.
+L’opera racconta il drammatico conflitto tra la volontà di arrendersi e l’istinto di continuare a vivere.`
+    },
+    {
+      title: "Donna allo specchio",
+      year: "2014",
+      medium: "Pittura",
+      file: "PHOTO-2026-10-12-18-44-05.jpg",
+      description: `“Donna allo specchio” è un’opera dal forte valore simbolico, che affronta il dramma della violenza sulle donne attraverso un linguaggio pittorico in cui dolore e bellezza si incontrano.
+La figura femminile, delicata e luminosa, emerge da uno specchio infranto, metafora di una violenza che spezza certezze, identità e sogni, ma non riesce a cancellare la dignità della donna.`
+    }
+  ];
+
+  const griglia = document.querySelector(".works-grid");
+  const totale = artworks.length + nuoveOpere.length;
+
+  document.querySelector(".hero-topline span:last-child").textContent =
+    `01 / ${String(totale).padStart(2, "0")}`;
+
+  document.querySelector('.work-card[data-index="0"]').setAttribute(
+    "aria-label",
+    `Apri Ritorno all’origine, opera 1 di ${totale}`
+  );
+
+  const stile = document.createElement("style");
+  stile.textContent = `
+    .lightbox[open] { overflow-y: auto; }
+    .lightbox-content { flex: 1 0 45vh; }
+    .lightbox-content img { max-height: 62vh; }
+    .artwork-description {
+      max-width: 720px;
+      margin: 12px auto 20px;
+      color: #c7c7c2;
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+  `;
+  document.head.appendChild(stile);
+
+  const descrizione = document.createElement("p");
+  descrizione.className = "artwork-description";
+  dialog.appendChild(descrizione);
+
+  nuoveOpere.forEach((opera) => {
+    const indice = artworks.length;
+    artworks.push(opera);
+
+    const scheda = document.createElement("button");
+    scheda.className = "work-card";
+    scheda.type = "button";
+    scheda.dataset.index = indice;
+    scheda.setAttribute(
+      "aria-label",
+      `Apri ${opera.title}, opera ${indice + 1} di ${totale}`
+    );
+
+    const cornice = document.createElement("span");
+    cornice.className = "image-frame";
+
+    const immagine = document.createElement("img");
+    immagine.src = opera.file;
+    immagine.alt = "";
+    immagine.loading = "lazy";
+    cornice.appendChild(immagine);
+
+    const dettagli = document.createElement("span");
+    dettagli.className = "work-meta";
+
+    const titolo = document.createElement("span");
+    titolo.textContent =
+      `${String(indice + 1).padStart(2, "0")} — ${opera.title}`;
+
+    const tecnica = document.createElement("span");
+    tecnica.textContent = opera.medium;
+
+    dettagli.append(titolo, tecnica);
+    scheda.append(cornice, dettagli);
+
+    scheda.addEventListener("click", () => {
+      previousFocus = scheda;
+      showArtwork(indice);
+      descrizione.textContent = opera.description;
+      lightboxImage.alt = opera.title;
+      dialog.showModal();
+      dialog.querySelector(".close-button").focus();
+    });
+
+    griglia.appendChild(scheda);
+  });
+
+  document.querySelector('.work-card[data-index="0"]').addEventListener(
+    "click",
+    () => { descrizione.textContent = ""; }
+  );
+})();
+</script>
 <body>
   <a class="skip-link" href="#opere">Vai alle opere</a>
   <header class="site-header" id="inizio">
